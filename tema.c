@@ -41,5 +41,17 @@ if(T == 1)
 
 //              TASK 2 end
 
+//              TASK 3
+
+else 
+{
+
+    Arbore* arbore = creare(matrice, N, M, 0, K);
+    afisare3pre(argv[2], arbore, matrice, N, M);
+    eliberareArbore(arbore);
+    eliberare(matrice, N);
+}
+
+//              TASK 3 END
     return 0;
 }

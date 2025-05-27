@@ -45,3 +45,20 @@ int isEmpty(const Queue* q);
 void deleteQueue(Queue* q);
 
 void schimbare2(const char *fisier, char** matrice, int N, int M, int gen);
+
+
+
+
+    //task 3
+
+struct T { 
+	Queue* modificari;
+	struct  T  *left,*right; 
+}; 
+typedef struct T Arbore;
+
+void schimbare3st(char** matrice, int N, int M, Queue* schimbat);
+void schimbare3dr(char** matrice, int N, int M, Queue* schimbat);
+Arbore* creare(char** matrice, int N, int M, int gen, int genmax);
+void afisare3pre(const char *fisier, Arbore* nod, char** matrice, int N, int M);
+void eliberareArbore(Arbore* nod);

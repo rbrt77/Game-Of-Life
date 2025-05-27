@@ -373,3 +373,213 @@ void schimbare2(const char *fisier, char** matrice, int N, int M, int gen)
         eliberare(next, N);
     }
 }
+
+
+
+    //      TASK 3
+
+void schimbare3st(char** matrice, int N, int M, Queue* schimbat)
+{
+    int nr;
+    char** next = alocare(N,M);
+
+
+    for(int i=0; i<N; i++)
+    {
+        for(int j=0; j<M; j++)
+        {
+            nr = (numarare(matrice, N, M, i, j));
+                if(nr == 2)
+                    next[i][j] = 'X';
+                else
+                    next[i][j] = matrice[i][j];
+
+                if (next[i][j] != matrice[i][j])
+                    enQueue(schimbat, i, j);
+        }
+    }
+    
+    for(int i=0; i<N; i++)
+    {
+        for(int j=0; j<M; j++)
+        {
+            matrice[i][j] = next[i][j];
+        }
+    }
+    eliberare(next, N);
+}
+
+void schimbare3dr(char** matrice, int N, int M, Queue* schimbat)
+{
+    int nr=0;
+    char** next = alocare(N,M);
+
+
+    for(int i=0; i<N; i++)
+    {
+        for(int j=0; j<M; j++)
+        {
+            nr = (numarare(matrice, N, M, i, j));
+
+            if(matrice[i][j] == 'X')
+            {
+                if(nr < 2 || nr > 3)
+                {
+                    enQueue(schimbat, i, j); 
+                    next[i][j] = '+';  
+                }
+                else
+                    next[i][j] = 'X'; 
+                    
+            }
+            
+            else
+            {
+                if(nr == 3)
+                {
+                    enQueue(schimbat, i, j);
+                    next[i][j] = 'X';
+                }
+                else
+                    next[i][j] = '+';
+            }
+        }
+    }
+
+    for(int i=0; i<N; i++)
+    {
+        for(int j=0; j<M; j++)
+        {
+            matrice[i][j] = next[i][j];
+        }
+    }
+    eliberare(next, N);
+}
+
+
+Arbore* creare(char** matrice, int N, int M, int gen, int genmax)
+{
+    if(gen > genmax)
+        return NULL;
+
+    Arbore* nod = (Arbore*)malloc(sizeof(Arbore));
+       
+    nod->modificari = createQueue();    // goala inc
+
+    if (gen == 0) 
+    {
+
+        for (int i = 0; i < N; i++) 
+        {
+            for (int j = 0; j < M; j++) 
+            {
+                if (matrice[i][j] == 'X') 
+                    enQueue(nod->modificari, i, j); 
+
+            }
+        }
+    } 
+
+    else
+    {
+        char** matraux = alocare(N, M);
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < M; j++)
+                matraux[i][j] = matrice[i][j];
+
+        // sch st pe matrice init
+        schimbare3st(matrice, N, M, nod->modificari);
+    
+        //pt fiu stamga
+        nod->left = creare(matrice, N, M, gen+1, genmax);
+        eliberare(matraux, N);
+    }
+
+    if (gen == 0)
+    nod->left = creare(matrice, N, M, gen + 1, genmax);  // doar dacă e gen 0
+
+    char** matraux2 = alocare(N, M);
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < M; j++)
+            matraux2[i][j] = matrice[i][j];
+
+    Queue* schdr = createQueue();
+    schimbare3dr(matraux2, N, M, schdr);
+
+    nod->right = creare(matraux2, N, M, gen + 1, genmax);
+
+    eliberare(matraux2, N);
+    deleteQueue(schdr);
+
+    return nod;
+
+}
+
+
+
+void afisare3pre(const char *fisier, Arbore* nod, char** matrice, int N, int M) 
+{
+    if (nod == NULL) 
+        return;
+
+    char** aux = alocare(N, M);
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < M; j++)
+            aux[i][j] = matrice[i][j];
+
+
+    Node* modif = nod->modificari->front;
+    while (modif) {
+        int x = modif->valX;
+        int y = modif->valY; 
+
+
+        if (aux[x][y] == 'X')
+            aux[x][y] = '+';
+        else
+            aux[x][y] = 'X';
+
+        modif = modif->next;
+    }
+ 
+    FILE *out = fopen(fisier, "a");
+    if(out == NULL)
+    {
+        printf("EROARE - NU S A DESCHIS FISIERUL IESIRE \n");
+        exit(1);
+    }    
+
+    for (int i = 0; i < N; i++) 
+    {
+        for (int j = 0; j < M; j++)
+            fprintf(out, "%c", aux[i][j]);
+        fprintf(out, "\n");
+    }
+    fprintf(out, "\n");
+    fclose(out);
+
+    afisare3pre(out, nod->left, aux, N, M);
+    afisare3pre(out, nod->right, aux, N, M);
+
+    eliberare(aux, N);  
+}
+
+// void preorder(Node* root) {
+//     if (root) {
+//         printf("%d ", root->val);     // 1. Procesează rădăcina
+//         preorder(root->left);         // 2. Parcurge subarborele stâng
+//         preorder(root->right);        // 3. Parcurge subarborele drept
+//     }
+// }
+
+void eliberareArbore(Arbore* nod) 
+{
+    if (nod == NULL)
+        return;
+
+    eliberareArbore(nod->left);  
+    eliberareArbore(nod->right); 
+
+    deleteQueue(nod->modificari); 
+    free(nod);  
+}
