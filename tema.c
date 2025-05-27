@@ -6,9 +6,13 @@ int main(int argc, char* argv[])
     
     int T, N, M, K;
     char **matrice = citire(argv[1], &T, &N, &M, &K);
-  
+    
 
-    afisare(argv[2], matrice, N);
+//              TASK 1
+
+if(T == 1)
+{
+    afisareinit(argv[2], matrice, N);
 
 
     for(int i=0; i<K; i++)
@@ -18,6 +22,24 @@ int main(int argc, char* argv[])
     }
 
     eliberare(matrice, N);
+}
+
+//              TASK 1 end
+
+
+//              TASK 2 (e facut cu COADA de liste, NU STIVA de liste)
+    
+ else if(T == 2)
+{
+    for(int i=0; i<K; i++)
+    {
+        schimbare2(argv[2], matrice, N, M, i+1);
+    }
+
+    eliberare(matrice, N);
+}
+
+//              TASK 2 end
 
     return 0;
 }
