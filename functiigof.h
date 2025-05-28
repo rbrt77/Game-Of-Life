@@ -79,4 +79,4 @@ struct S
     NodeS *front;
     struct S *next;
 };
-typedef struct S Stack;
+typedef struct S Stack; 
