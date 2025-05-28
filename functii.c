@@ -411,7 +411,7 @@ void schimbare3st(char** matrice, int N, int M, Queue* schimbat)
 
 void schimbare3dr(char** matrice, int N, int M, Queue* schimbat)
 {
-    int nr=0;
+   
     char** next = alocare(N,M);
 
 
@@ -419,7 +419,7 @@ void schimbare3dr(char** matrice, int N, int M, Queue* schimbat)
     {
         for(int j=0; j<M; j++)
         {
-            nr = (numarare(matrice, N, M, i, j));
+            int nr = (numarare(matrice, N, M, i, j));
 
             if(matrice[i][j] == 'X')
             {

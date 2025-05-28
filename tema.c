@@ -43,7 +43,7 @@ if(T == 1)
 
 //              TASK 3
 
-else 
+else if(T < 5)
 {
 
     Arbore* arbore = creare(matrice, N, M, 0, K);
@@ -53,5 +53,6 @@ else
 }
 
 //              TASK 3 END
-    return 0;
+
+
 }

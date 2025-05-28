@@ -62,3 +62,21 @@ void schimbare3dr(char** matrice, int N, int M, Queue* schimbat);
 Arbore* creare(char** matrice, int N, int M, int gen, int genmax);
 void afisare3pre(const char *fisier, Arbore* nod, char** matrice, int N, int M);
 void eliberareArbore(Arbore* nod);
+
+
+
+    //bonus
+
+struct NodSt {
+    int valX, valY;
+    struct NodSt *next;
+};
+typedef struct NodSt NodeS;
+
+
+struct S
+{
+    NodeS *front;
+    struct S *next;
+};
+typedef struct S Stack;
