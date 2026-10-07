@@ -58,7 +58,4 @@ Fișierul `input.txt` trebuie să conțină datele de intrare în formatul speci
 - `preordine()` – Parcurge arborele în preordine și aplică modificările.
 - `reconstruire_bonus()` – Reconstruiește matricea inițială folosind o stivă de liste.
 
-## Autori
-
-Proiect realizat în cadrul laboratorului de Algoritmi Fundamentali, anul 1, Facultatea de Matematică și Informatică, Universitatea din București.
 
