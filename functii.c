@@ -457,63 +457,44 @@ void schimbare3dr(char** matrice, int N, int M, Queue* schimbat)
 }
 
 
-Arbore* creare(char** matrice, int N, int M, int gen, int genmax)
+
+
+static char** copie(char** m, int N, int M)
 {
-    if(gen > genmax)
-        return NULL;
+    char** c = alocare(N, M);
+    for(int i = 0; i < N; i++)
+        for(int j = 0; j < M; j++)
+            c[i][j] = m[i][j];
+    return c;
+}
 
+Arbore* creare(char** matrice, int N, int M, int gen, int genmax, Queue* mod)
+{
     Arbore* nod = (Arbore*)malloc(sizeof(Arbore));
-       
-    nod->modificari = createQueue();    // goala inc
+    nod->modificari = mod;
+    nod->left = NULL;
+    nod->right = NULL;
 
-    if (gen == 0) 
-    {
+    if(gen == genmax)
+        return nod;
 
-        for (int i = 0; i < N; i++) 
-        {
-            for (int j = 0; j < M; j++) 
-            {
-                if (matrice[i][j] == 'X') 
-                    enQueue(nod->modificari, i, j); 
+    // fiul stang: regula B pe o copie a matricei curente
+    char** st = copie(matrice, N, M);
+    Queue* mst = createQueue();
+    schimbare3st(st, N, M, mst);
+    nod->left = creare(st, N, M, gen + 1, genmax, mst);
+    eliberare(st, N);
 
-            }
-        }
-    } 
-
-    else
-    {
-        char** matraux = alocare(N, M);
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < M; j++)
-                matraux[i][j] = matrice[i][j];
-
-        // sch st pe matrice init
-        schimbare3st(matrice, N, M, nod->modificari);
-    
-        //pt fiu stamga
-        nod->left = creare(matrice, N, M, gen+1, genmax);
-        eliberare(matraux, N);
-    }
-
-    if (gen == 0)
-    nod->left = creare(matrice, N, M, gen + 1, genmax);  // doar dacă e gen 0
-
-    char** matraux2 = alocare(N, M);
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < M; j++)
-            matraux2[i][j] = matrice[i][j];
-
-    Queue* schdr = createQueue();
-    schimbare3dr(matraux2, N, M, schdr);
-
-    nod->right = creare(matraux2, N, M, gen + 1, genmax);
-
-    eliberare(matraux2, N);
-    deleteQueue(schdr);
+    // fiul drept: regulile standard pe o alta copie
+    char** dr = copie(matrice, N, M);
+    Queue* mdr = createQueue();
+    schimbare3dr(dr, N, M, mdr);
+    nod->right = creare(dr, N, M, gen + 1, genmax, mdr);
+    eliberare(dr, N);
 
     return nod;
-
 }
+
 
 
 
@@ -558,8 +539,8 @@ void afisare3pre(const char *fisier, Arbore* nod, char** matrice, int N, int M)
     fprintf(out, "\n");
     fclose(out);
 
-    afisare3pre(out, nod->left, aux, N, M);
-    afisare3pre(out, nod->right, aux, N, M);
+    afisare3pre(fisier, nod->left, aux, N, M);
+    afisare3pre(fisier, nod->right, aux, N, M);
 
     eliberare(aux, N);  
 }

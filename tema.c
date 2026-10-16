@@ -7,6 +7,7 @@ int main(int argc, char* argv[])
     int T, N, M, K;
     char **matrice = citire(argv[1], &T, &N, &M, &K);
     
+    
 
 //              TASK 1
 
@@ -27,6 +28,9 @@ if(T == 1)
 //              TASK 1 end
 
 
+
+
+
 //              TASK 2 (e facut cu COADA de liste, NU STIVA de liste)
     
  else if(T == 2)
@@ -41,13 +45,35 @@ if(T == 1)
 
 //              TASK 2 end
 
+
+
+
+
+
 //              TASK 3
 
 else if(T < 5)
 {
 
-    Arbore* arbore = creare(matrice, N, M, 0, K);
-    afisare3pre(argv[2], arbore, matrice, N, M);
+Queue* radacina = createQueue();
+    for(int i = 0; i < N; i++)
+        for(int j = 0; j < M; j++)
+            if(matrice[i][j] == 'X')
+                enQueue(radacina, i, j);
+
+    Arbore* arbore = creare(matrice, N, M, 0, K, radacina);
+
+    char** goala = alocare(N, M);
+    for(int i = 0; i < N; i++)
+        for(int j = 0; j < M; j++)
+            goala[i][j] = '+';
+
+    FILE* f = fopen(argv[2], "w");
+    fclose(f);
+
+    afisare3pre(argv[2], arbore, goala, N, M);
+
+    eliberare(goala, N);
     eliberareArbore(arbore);
     eliberare(matrice, N);
 }

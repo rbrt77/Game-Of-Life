@@ -59,7 +59,7 @@ typedef struct T Arbore;
 
 void schimbare3st(char** matrice, int N, int M, Queue* schimbat);
 void schimbare3dr(char** matrice, int N, int M, Queue* schimbat);
-Arbore* creare(char** matrice, int N, int M, int gen, int genmax);
+Arbore* creare(char** matrice, int N, int M, int gen, int genmax, Queue* mod);
 void afisare3pre(const char *fisier, Arbore* nod, char** matrice, int N, int M);
 void eliberareArbore(Arbore* nod);
 
